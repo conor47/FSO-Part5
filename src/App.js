@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -8,11 +9,21 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
+  const [message, setMessage] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )  
+  }, [])
+
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+    if(loggedUserJSON){
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
+    }
   }, [])
 
   const handleLogin = async (event) => {
@@ -22,12 +33,26 @@ const App = () => {
       const user = await loginService.login({
         username,password,
       })
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
+      setMessage(`${user.username} was succesfully logged in`)
+      setTimeout(() => {
+        setMessage('')
+      }, 5000)
     } catch (exception){
-      console.log("There was an error", exception);
+      console.log("There was an error", exception)
     }
+  }
+
+  const handLogout = (event) => {
+    window.localStorage.clear()
+    document.location.reload(true)
+    setMessage('Logged out')
+    setTimeout(() => {
+      setMessage('')
+    }, 5000)
   }
 
   const loginForm = () => (
@@ -66,6 +91,8 @@ const App = () => {
 
     if(user===null){
       return(
+        <div>
+        <Notification message={message} classType={'error'} />
         <form onSubmit={handleLogin}>
         <div>
           username
@@ -87,11 +114,15 @@ const App = () => {
         </div>
         <button type="submit">Login</button>
       </form>
+      </div>
       )
     }
     return (
       <div>
+        <Notification message={message} classType={'success'} />
         <h2>Blogs</h2>
+        <span>{`${user.username} logged in`}</span>
+        <input type="button" value="Logout" onClick={handLogout}></input>
         {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )} 
