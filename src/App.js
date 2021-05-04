@@ -3,8 +3,10 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import NewBlogForm from './components/NewBlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
+
 
 
 const App = () => {
@@ -86,16 +88,9 @@ const App = () => {
     }).catch(error => console.log(error))
   }
   
-  const loginForm = () => {
-    const hiddeWhenVisible = {display: loginVisible ? 'none' : ''}
-    const showWhenVisible = {display: loginVisible ? '' : 'none'}
-
-    return(
-    <div>
-        <div style={hiddeWhenVisible}>
-          <button onClick={() => setLoginVisible(true)}>Log in</button>
-        </div>
-        <div style={showWhenVisible}>
+  const loginForm = () => (
+    
+    <Togglable buttonLabel="Log in">
           <LoginForm
           username={username}
           password={password}
@@ -103,37 +98,22 @@ const App = () => {
           handlePasswordChange={({target}) => setPassword(target.value)}
           handleSubmit={handleLogin}
           />
-          <button onClick={() => setLoginVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
+    </Togglable>  
+  )
 
-  const blogForm = () => {
-    const hiddeWhenVisible = {display: newBlogVisible ? 'none' : ''}
-    const showWhenVisible = {display: newBlogVisible ? '' : 'none'}
-
-    return(
-    <div>
-        <div style={hiddeWhenVisible}>
-          <button onClick={() => setNewBlogVisible(true)}>Create new blog</button>
-        </div>
-        <div style={showWhenVisible}>
-          <NewBlogForm
-          newtitle={newTitle}
-          newauthor={newAuthor}
-          newurl={newUrl}
-          handleTitleChange={({target}) => setTitle(target.value)}
-          handleAuthorChange={({target}) => setAuthor(target.value)}
-          handleUrlChange={({target}) => setUrl(target.value)}
-          handleSubmit={handleNewBlog}
-          />
-          <button onClick={() => setNewBlogVisible(false)}>cancel</button>
-        </div>
-      </div>
-    )
-  }
-     
+  const blogForm = () => (
+    <Togglable buttonLabel="Create">
+        <NewBlogForm
+        newtitle={newTitle}
+        newauthor={newAuthor}
+        newurl={newUrl}
+        handleTitleChange={({target}) => setTitle(target.value)}
+        handleAuthorChange={({target}) => setAuthor(target.value)}
+        handleUrlChange={({target}) => setUrl(target.value)}
+        handleSubmit={handleNewBlog}
+        />
+    </Togglable>
+  )
     return (
       <div>
         <h2>Blogs</h2>
