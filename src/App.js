@@ -22,7 +22,7 @@ const App = () => {
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try{
       const user = await loginService.login({
         username,password,
@@ -51,15 +51,15 @@ const App = () => {
         setMessage('')
       }, 5000)
     } catch (exception){
-      console.log("There was an error", exception)
-      setMessage(`incorrect username or password`)
+      console.log('There was an error', exception)
+      setMessage('incorrect username or password')
       setTimeout(() => {
         setMessage('')
       }, 2000)
     }
   }
 
-  const handLogout = (event) => {
+  const handLogout = () => {
     window.localStorage.clear()
     document.location.reload(true)
   }
@@ -68,39 +68,39 @@ const App = () => {
 
     blogFormRef.current.toggleVisibility()
     blogService.createBlog(blogObject)
-    .then(returnedBlog => {
-      setBlogs(blogs.concat(returnedBlog))
-      setMessage(`a new blog ${returnedBlog.title} has been added`)
-      setTimeout(() => {
-        setMessage('')
-      },3000)
-    }).catch(error => console.log(error))
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setMessage(`a new blog ${returnedBlog.title} has been added`)
+        setTimeout(() => {
+          setMessage('')
+        },3000)
+      }).catch(error => console.log(error))
   }
-  
+
   const loginForm = () => (
-    
+
     <Togglable buttonLabel="Log in">
-          <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({target}) => setUsername(target.value)}
-          handlePasswordChange={({target}) => setPassword(target.value)}
-          handleSubmit={handleLogin}
-          />
-    </Togglable>  
+      <LoginForm
+        username={username}
+        password={password}
+        handleUsernameChange={({ target }) => setUsername(target.value)}
+        handlePasswordChange={({ target }) => setPassword(target.value)}
+        handleSubmit={handleLogin}
+      />
+    </Togglable>
   )
 
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <NewBlogForm createBlog={addBlog}/>
+      <NewBlogForm createBlog={addBlog}/>
     </Togglable>
   )
-    return (
-      <div>
-        <h2>Blogs</h2>
-        <Notification message={message} classType={'error'} />
+  return (
+    <div>
+      <h2>Blogs</h2>
+      <Notification message={message} classType={'error'} />
 
-        {user == null ?
+      {user === null ?
         loginForm() :
         <div>
           <p>{`${user.username} logged in`}</p>
@@ -108,15 +108,15 @@ const App = () => {
           <h2>Create New</h2>
           {blogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-          <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs}/>
-          )} 
+            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs}/>
+          )}
         </div>}
-      </div>
-    )
-      
+    </div>
+  )
 
-     
-  
+
+
+
 }
 
 export default App
