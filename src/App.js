@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
@@ -15,11 +15,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [message, setMessage] = useState('')
-  const [newTitle, setTitle] = useState ('')
-  const [newAuthor, setAuthor] = useState ('')
-  const [newUrl, setUrl] = useState ('')
-  const [loginVisible, setLoginVisible] = useState(false)
-  const [newBlogVisible, setNewBlogVisible] = useState(false)
+  const blogFormRef = useRef()
+
+
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -66,21 +64,12 @@ const App = () => {
     document.location.reload(true)
   }
 
-  const handleNewBlog = (event) => {
-    event.preventDefault()
+  const addBlog = (blogObject) => {
 
-    const blogObject = {
-      title:newTitle,
-      author:newAuthor,
-      url:newUrl
-    }
-
+    blogFormRef.current.toggleVisibility()
     blogService.createBlog(blogObject)
     .then(returnedBlog => {
       setBlogs(blogs.concat(returnedBlog))
-      setTitle('')
-      setAuthor('')
-      setUrl('')
       setMessage(`a new blog ${returnedBlog.title} has been added`)
       setTimeout(() => {
         setMessage('')
@@ -102,16 +91,8 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <Togglable buttonLabel="Create">
-        <NewBlogForm
-        newtitle={newTitle}
-        newauthor={newAuthor}
-        newurl={newUrl}
-        handleTitleChange={({target}) => setTitle(target.value)}
-        handleAuthorChange={({target}) => setAuthor(target.value)}
-        handleUrlChange={({target}) => setUrl(target.value)}
-        handleSubmit={handleNewBlog}
-        />
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
+        <NewBlogForm createBlog={addBlog}/>
     </Togglable>
   )
     return (
