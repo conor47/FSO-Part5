@@ -64,6 +64,19 @@ const App = () => {
     document.location.reload(true)
   }
 
+  const handleLike = (blog) => {
+
+    const newBlog = { ...blog, likes:blog.likes+1 }
+    blogService.updateBlog(blog.id, newBlog)
+  }
+
+  const handleDelete = (blog) => {
+    if(window.confirm(`Confirm deletion of blog titled : ${blog.title}`)){
+      blogService.deleteBlog(blog.id)
+      setBlogs(blogs.filter(p => p.id !== blog.id))
+    }
+  }
+
   const addBlog = (blogObject) => {
 
     blogFormRef.current.toggleVisibility()
@@ -108,7 +121,7 @@ const App = () => {
           <h2>Create New</h2>
           {blogForm()}
           {blogs.sort((a,b) => b.likes - a.likes).map(blog =>
-            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs}/>
+            <Blog key={blog.id} blog={blog} setBlogs={setBlogs} blogs={blogs} handleDelete={handleDelete} handleLike={handleLike}/>
           )}
         </div>}
     </div>

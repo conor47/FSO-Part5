@@ -35,21 +35,21 @@ const NewBlogForm = ({
   }
 
   return (
-    <div>
+    <div className='formDiv'>
       <h2>New Blog</h2>
       <form onSubmit={addBlog}>
         <div>
           <div>
                     title:
-            <input type="text" value={newTitle} name="title" onChange={handleTitleChange} />
+            <input type="text" value={newTitle} name="title" id="title" onChange={handleTitleChange} />
           </div>
           <div>
                     Author:
-            <input type="text" value={newAuthor} name="author" onChange={handleAuthorChange} />
+            <input type="text" value={newAuthor} name="author" id="author" onChange={handleAuthorChange} />
           </div>
           <div>
                     Url:
-            <input type="text" value={newUrl} name="url" onChange={handleUrlChange} />
+            <input type="text" value={newUrl} name="url" id="url" onChange={handleUrlChange} />
           </div>
         </div>
         <button type="submit">Create</button>
