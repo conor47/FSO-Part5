@@ -7,7 +7,7 @@ describe('Blog App', function(){
       username : 'conor47',
       password : 'password'
     }
-    cy.request('POST', 'http://localhost:3003/api/users/', user)
+    cy.request('POST', 'http://localhost:3003/api/users', user)
     cy.visit('http://localhost:3000')
   })
 
